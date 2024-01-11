@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korisnici</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="/css/stylebar.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+
+<body  th:if="${#authorization.expression('isAuthenticated()') == true}">
+
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div class="pure-menu">
+            <a class="pure-menu-heading" href="/">MIKROSERVISI</a>
+
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item"><a href="/users" class="pure-menu-link">Korisnici</a></li>
+                <li class="pure-menu-item"><a href="/students" class="pure-menu-link">Studenti</a></li>
+                <li class="pure-menu-item"><a href="/departments" class="pure-menu-link">Odsjeci</a></li>
+                <li class="pure-menu-item"><a href="/subjects" class="pure-menu-link">Predmeti</a></li>
+                <li class="pure-menu-item" th:if="${#request.userPrincipal.principal.getRole()!='student'}"><a href="/exams" class="pure-menu-link">Ispiti</a></li>
+                <li class="pure-menu-item" th:if="${#request.userPrincipal.principal.getRole()=='student'}"><a href="/examsStudent" class="pure-menu-link">Ispiti</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="main">
+        <form class="pure-form specijalna-forma" th:action="@{/process_register}" method="post">
+            <fieldset class="pure-group">
+                <input type="text" class="pure-input-1" placeholder="First name" name="firstName" />
+                <input type="text" class="pure-input-1" placeholder="Last name" name="lastName" />
+                <input type="email" class="pure-input-1" placeholder="E-mail" name="username" />
+                <input type="password" class="pure-input-1" placeholder="password" name="password" />
+                <select name="role" class="pure-input-1">
+                    <option value="admin">Admin</option>
+                    <option value="professor">Profesor</option>
+                    <option value="user">Korisnik</option>
+                </select>
+            </fieldset>
+            <button type="submit" class="pure-button pure-input-1 button-secondary">Register user</button>
+        </form>
+    </div>
+    <br>
+    <br>
+    <table class="pure-table pure-table-horizontal specijalna-forma">
+        <thead>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>E-mail</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user: ${listUsers}" class="specijalni-red">
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.role}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<script src="/js/ui.js"></script>
+
+</body>
+</html>
